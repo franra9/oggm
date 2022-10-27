@@ -942,6 +942,38 @@ def compute_centerlines(gdir, heads=None):
         # For diagnostics of filtered centerlines
         gdir.add_to_diagnostics('n_orig_centerlines', len(cls))
 
+###
+from oggm import entity_task, cfg
+import logging
+
+# Module logger
+log = logging.getLogger(__name__)
+
+cfg.add_to_basenames('centerlines_rgi', 'centerlines_rgi.shp',
+                     docstr='Centerlines computed differently')
+
+
+@entity_task(log)
+def compute_centerlines_rgi(gdir):
+    """Compute the centerlines following Kienholz et al., (2014).
+    """
+
+    # Get path to DEM and Outlines from Gdir
+    dem_path = gdir.get_filepath('dem')
+    outline_path = gdir.read_shapefile('outlines')
+
+    # call your tool
+    # create some function out of GLIMS/glacier_celnterlines tool #https://github.com/GLIMS-RGI/glacier_centerlines
+    
+    # now you have the centerlines cls
+    cls = None
+
+    # Write them
+    gdir.write_shapefile(cls, 'centerlines_rgi')
+
+    return cls
+###
+
 
 @entity_task(log, writes=['downstream_line'])
 def compute_downstream_line(gdir):
